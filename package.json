@@ -1,6 +1,6 @@
 {
   "name": "@valueflows/track-trace",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "tracking and tracking algorithms working on ValueFlows datasets",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,6 +10,7 @@
   "files": [
     "/dist"
   ],
+  "repository": "https://github.com/valueflows/vf-track-trace.ts",
   "contributors": [
     { "name" : "elf Pavlik",
       "url" : "https://elf-pavlik.hackers4peace.net/"
