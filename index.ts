@@ -1,7 +1,7 @@
 const nn = require('@rdfjs/data-model').namedNode
 const namespace = require('@rdfjs/namespace')
 
-import { Quad, NamedNode, Store, Term } from 'rdf-js'
+import { Quad, NamedNode, Source } from 'rdf-js'
 
 export interface ResultNode {
   type :NamedNode,
@@ -22,7 +22,7 @@ function objects (quads :Quad[]) {
   return quads.map(quad => quad.object as NamedNode)
 }
 
-async function match (store :Store, subject ?:NamedNode, predicate ?:NamedNode, object ?:NamedNode, graph ?:NamedNode) {
+async function match (store :Source, subject ?:NamedNode, predicate ?:NamedNode, object ?:NamedNode, graph ?:NamedNode) {
   const results :Quad[] = []
     // @ts-ignore
     for await(const quad of store.match(subject, predicate, object, graph)) {
@@ -33,23 +33,23 @@ async function match (store :Store, subject ?:NamedNode, predicate ?:NamedNode, 
 
 // TODO: use https://github.com/rdf-ext/clownface
 
-async function outNodes (store :Store, subject :NamedNode, predicate :NamedNode) {
+async function outNodes (store :Source, subject :NamedNode, predicate :NamedNode) {
   return objects(await match(store, subject, predicate, null))
 }
 
-async function inNodes (store :Store, object :NamedNode, predicate :NamedNode) {
+async function inNodes (store :Source, object :NamedNode, predicate :NamedNode) {
   return subjects(await match(store, null, predicate, object))
 }
 
-export function track (store :Store, iri :string) :AsyncIterableIterator<ResultNode>
-export function track (store :Store, iri :NamedNode) :AsyncIterableIterator<ResultNode>
+export function track (store :Source, iri :string) :AsyncIterableIterator<ResultNode>
+export function track (store :Source, iri :NamedNode) :AsyncIterableIterator<ResultNode>
 export async function * track (store :any, iri :any) :AsyncIterableIterator<ResultNode> {
   if (!iri.termType) iri = nn(iri)
   const visited :NamedNode[] = []
   yield * await tracker(store, visited, iri as NamedNode)
 }
 
-async function * tracker (store :Store, visited :NamedNode[], current :NamedNode, distance = 0)  :AsyncIterableIterator<ResultNode> {
+async function * tracker (store :Source, visited :NamedNode[], current :NamedNode, distance = 0)  :AsyncIterableIterator<ResultNode> {
   if (visited.some(node => node.equals(current))) return
   visited.push(current)
   const types = await outNodes(store, current, ns.rdf('type'))
@@ -91,15 +91,15 @@ async function * tracker (store :Store, visited :NamedNode[], current :NamedNode
   }
 }
 
-export function trace (store :Store, iri :string) :AsyncIterableIterator<ResultNode>
-export function trace (store :Store, iri :NamedNode) :AsyncIterableIterator<ResultNode>
+export function trace (store :Source, iri :string) :AsyncIterableIterator<ResultNode>
+export function trace (store :Source, iri :NamedNode) :AsyncIterableIterator<ResultNode>
 export async function * trace (store :any, iri :any) :AsyncIterableIterator<ResultNode> {
   if (!iri.termType) iri = nn(iri)
   const visited :NamedNode[] = []
   yield * await tracer(store, visited, iri as NamedNode)
 }
 
-async function * tracer (store :Store, visited :NamedNode[], current :NamedNode, distance = 0) :AsyncIterableIterator<ResultNode> {
+async function * tracer (store :Source, visited :NamedNode[], current :NamedNode, distance = 0) :AsyncIterableIterator<ResultNode> {
   if (visited.some(node => node.equals(current))) return
   visited.push(current)
   const types = await outNodes(store, current, ns.rdf('type'))
