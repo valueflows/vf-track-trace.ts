@@ -45,8 +45,9 @@ async function inNodes (store :Store, object :NamedNode, predicate :NamedNode) {
   return subjects(await match(store, null, predicate, object))
 }
 
-export async function * track (store :Store, iri :(string | NamedNode)) {
-  //@ts-ignore
+export function track (store :Store, iri :string) :AsyncIterableIterator<ResultNode>
+export function track (store :Store, iri :NamedNode) :AsyncIterableIterator<ResultNode>
+export async function * track (store :any, iri :any) :AsyncIterableIterator<ResultNode> {
   if (!iri.termType) iri = nn(iri)
   const visited :NamedNode[] = []
   yield * await tracker(store, visited, iri as NamedNode)
@@ -94,8 +95,9 @@ async function * tracker (store :Store, visited :NamedNode[], current :NamedNode
   }
 }
 
-export async function * trace (store :Store, iri :(string | NamedNode)) {
-  // @ts-ignore
+export function trace (store :Store, iri :string) :AsyncIterableIterator<ResultNode>
+export function trace (store :Store, iri :NamedNode) :AsyncIterableIterator<ResultNode>
+export async function * trace (store :any, iri :any) :AsyncIterableIterator<ResultNode> {
   if (!iri.termType) iri = nn(iri)
   const visited :NamedNode[] = []
   yield * await tracer(store, visited, iri as NamedNode)
