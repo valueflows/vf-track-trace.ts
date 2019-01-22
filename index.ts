@@ -1,6 +1,3 @@
-import { finished } from 'stream'
-import { promisify } from 'util'
-const done = promisify(finished)
 const nn = require('@rdfjs/data-model').namedNode
 const namespace = require('@rdfjs/namespace')
 
@@ -27,11 +24,10 @@ function objects (quads :Quad[]) {
 
 async function match (store :Store, subject ?:NamedNode, predicate ?:NamedNode, object ?:NamedNode, graph ?:NamedNode) {
   const results :Quad[] = []
-  await done(
-    //@ts-ignore
-    store.match(subject, predicate, object, graph)
-      .on('data', (quad :Quad) => { results.push(quad) })
-  )
+    // @ts-ignore
+    for await(const quad of store.match(subject, predicate, object, graph)) {
+      results.push(quad)
+    }
   return results
 }
 
