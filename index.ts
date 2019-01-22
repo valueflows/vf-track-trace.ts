@@ -38,11 +38,11 @@ async function match (store :Store, subject ?:NamedNode, predicate ?:NamedNode, 
 // TODO: use https://github.com/rdf-ext/clownface
 
 async function outNodes (store :Store, subject :NamedNode, predicate :NamedNode) {
-  return objects(await match(store, subject, predicate, undefined))
+  return objects(await match(store, subject, predicate, null))
 }
 
 async function inNodes (store :Store, object :NamedNode, predicate :NamedNode) {
-  return subjects(await match(store, undefined, predicate, object))
+  return subjects(await match(store, null, predicate, object))
 }
 
 export async function * track (store :Store, iri :(string | NamedNode)) {

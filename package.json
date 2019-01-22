@@ -12,8 +12,9 @@
   ],
   "repository": "https://github.com/valueflows/vf-track-trace.ts",
   "contributors": [
-    { "name" : "elf Pavlik",
-      "url" : "https://elf-pavlik.hackers4peace.net/"
+    {
+      "name": "elf Pavlik",
+      "url": "https://elf-pavlik.hackers4peace.net/"
     }
   ],
   "license": "Unlicense",
@@ -27,5 +28,4 @@
     "@rdfjs/data-model": "^1.1.1",
     "@rdfjs/namespace": "^1.0.0"
   }
-
 }
